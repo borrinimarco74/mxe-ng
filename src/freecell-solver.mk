@@ -23,6 +23,7 @@ define $(PKG)_BUILD
     cd '$(BUILD_DIR)' && $(TARGET)-cmake '$(SOURCE_DIR)' \
         -DFCS_WITH_TEST_SUITE=OFF \
         -DBUILD_TESTING=OFF \
+        -DFCS_ENABLE_DBM_SOLVER=OFF \
         -D_PYTHON3=_PYTHON3-NOTFOUND
     $(MAKE) -C '$(BUILD_DIR)' -j '$(JOBS)'
     $(MAKE) -C '$(BUILD_DIR)' -j 1 install
