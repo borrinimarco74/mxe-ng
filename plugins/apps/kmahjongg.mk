@@ -35,40 +35,40 @@ define $(PKG)_BUILD
     
     # --- DEPLOYMENT PHASE ---
     # Create the dist folder for the standalone app
-    mkdir -p '$(PREFIX)/$(TARGET)/dist/kmahjongg'
+    mkdir -p '$(PREFIX)/$(TARGET)/dist/$(PKG)'
     
     # Copy the main executable
-    cp '$(PREFIX)/$(TARGET)/qt6/bin/kmahjongg.exe' '$(PREFIX)/$(TARGET)/dist/kmahjongg/'
+    cp '$(PREFIX)/$(TARGET)/qt6/bin/kmahjongg.exe' '$(PREFIX)/$(TARGET)/dist/$(PKG)/'
     
     # Resolve and copy ONLY the strictly necessary DLLs using the native MXE tool
     '$(TOP_DIR)/tools/copydlldeps.sh' -c \
-        -d '$(PREFIX)/$(TARGET)/dist/kmahjongg/' \
+        -d '$(PREFIX)/$(TARGET)/dist/$(PKG)/' \
         -S "$(PREFIX)/$(TARGET)/qt6/bin $(PREFIX)/$(TARGET)/bin" \
-        -f '$(PREFIX)/$(TARGET)/dist/kmahjongg/kmahjongg.exe'
+        -f '$(PREFIX)/$(TARGET)/dist/$(PKG)/kmahjongg.exe'
     
-    # Copy ALL Qt6/KF6 plugins preserving the structure (platforms, imageformats, styles, etc.)
-    cp -r '$(PREFIX)/$(TARGET)/qt6/plugins/'* '$(PREFIX)/$(TARGET)/dist/kmahjongg/' || true
+    # Copy Qt6/KF6 plugins
+    cp -r '$(PREFIX)/$(TARGET)/qt6/plugins' '$(PREFIX)/$(TARGET)/dist/$(PKG)/' || true
     
     # Copy QML modules
-    cp -r '$(PREFIX)/$(TARGET)/qt6/qml' '$(PREFIX)/$(TARGET)/dist/kmahjongg/' || true
+    cp -r '$(PREFIX)/$(TARGET)/qt6/qml' '$(PREFIX)/$(TARGET)/dist/$(PKG)/' || true
     
     # Resolve dependencies for all newly copied DLLs (plugins and qml)
     '$(TOP_DIR)/tools/copydlldeps.sh' -c \
-        -d '$(PREFIX)/$(TARGET)/dist/kmahjongg/' \
+        -d '$(PREFIX)/$(TARGET)/dist/$(PKG)/' \
         -S "$(PREFIX)/$(TARGET)/qt6/bin $(PREFIX)/$(TARGET)/bin" \
-        -F '$(PREFIX)/$(TARGET)/dist/kmahjongg/'
+        -F '$(PREFIX)/$(TARGET)/dist/$(PKG)/'
     
     # Copy specific data files required by kmahjongg directly into the app folder
-    mkdir -p '$(PREFIX)/$(TARGET)/dist/kmahjongg/data'
-    cp -r '$(PREFIX)/$(TARGET)/qt6/bin/data/kmahjongg' '$(PREFIX)/$(TARGET)/dist/kmahjongg/data/' || true
-    cp -r '$(PREFIX)/$(TARGET)/qt6/bin/data/kmahjongglib' '$(PREFIX)/$(TARGET)/dist/kmahjongg/data/' || true
-    cp -r '$(PREFIX)/$(TARGET)/qt6/bin/data/icons' '$(PREFIX)/$(TARGET)/dist/kmahjongg/data/' || true
-    cp -r '$(PREFIX)/$(TARGET)/qt6/bin/data/locale' '$(PREFIX)/$(TARGET)/dist/kmahjongg/data/' || true
+    mkdir -p '$(PREFIX)/$(TARGET)/dist/$(PKG)/data'
+    cp -r '$(PREFIX)/$(TARGET)/qt6/bin/data/kmahjongg' '$(PREFIX)/$(TARGET)/dist/$(PKG)/data/' || true
+    cp -r '$(PREFIX)/$(TARGET)/qt6/bin/data/kmahjongglib' '$(PREFIX)/$(TARGET)/dist/$(PKG)/data/' || true
+    cp -r '$(PREFIX)/$(TARGET)/qt6/bin/data/icons' '$(PREFIX)/$(TARGET)/dist/$(PKG)/data/' || true
+    cp -r '$(PREFIX)/$(TARGET)/qt6/bin/data/locale' '$(PREFIX)/$(TARGET)/dist/$(PKG)/data/' || true
     
     # Create the qt.conf file to resolve hardcoded paths in a standalone environment
-    echo "[Paths]" > '$(PREFIX)/$(TARGET)/dist/kmahjongg/qt.conf'
-    echo "Prefix = ." >> '$(PREFIX)/$(TARGET)/dist/kmahjongg/qt.conf'
-    echo "Plugins = ." >> '$(PREFIX)/$(TARGET)/dist/kmahjongg/qt.conf'
-    echo "Data = data" >> '$(PREFIX)/$(TARGET)/dist/kmahjongg/qt.conf'
-    echo "Qml2Imports = qml" >> '$(PREFIX)/$(TARGET)/dist/kmahjongg/qt.conf'
+    echo "[Paths]" > '$(PREFIX)/$(TARGET)/dist/$(PKG)/qt.conf'
+    echo "Prefix = ." >> '$(PREFIX)/$(TARGET)/dist/$(PKG)/qt.conf'
+    echo "Plugins = plugins" >> '$(PREFIX)/$(TARGET)/dist/$(PKG)/qt.conf'
+    echo "Data = data" >> '$(PREFIX)/$(TARGET)/dist/$(PKG)/qt.conf'
+    echo "Qml2Imports = qml" >> '$(PREFIX)/$(TARGET)/dist/$(PKG)/qt.conf'
 endef
