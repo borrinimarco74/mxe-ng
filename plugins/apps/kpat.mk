@@ -24,7 +24,7 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    # Patch to prevent KPat from crashing/exiting(1) on Windows due to missing DBus
+    # Workaround to prevent KPat from crashing/exiting(1) on Windows due to missing DBus process
     $(SED) -i 's/KDBusService::Multiple/KDBusService::Multiple | KDBusService::NoExitOnFailure/' '$(SOURCE_DIR)/src/main.cpp'
     
     # Workaround for GCC 11 parsing bug with [[deprecated]] and __declspec
