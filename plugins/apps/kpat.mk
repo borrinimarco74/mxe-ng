@@ -27,6 +27,9 @@ define $(PKG)_BUILD
     # Patch to prevent KPat from crashing/exiting(1) on Windows due to missing DBus
     $(SED) -i 's/KDBusService::Multiple/KDBusService::Multiple | KDBusService::NoExitOnFailure/' '$(SOURCE_DIR)/src/main.cpp'
     
+    # Workaround for GCC 11 parsing bug with [[deprecated]] and __declspec
+    $(SED) -i 's/KF 6.0/KF 7.0/' '$(SOURCE_DIR)/CMakeLists.txt'
+    
     cd '$(BUILD_DIR)' && $(KF6_CMAKE) -S '$(SOURCE_DIR)' -B '$(BUILD_DIR)' \
         -DBUILD_TESTING=OFF \
         -DBUILD_DOC=OFF
